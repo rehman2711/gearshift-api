@@ -478,6 +478,12 @@ const data = {
 
 // Routes
 app.get("/api/cars", (req, res) => res.json(data.carCard));
+// Get a car by ID
+app.get("/api/cars/:id", (req, res) => {
+  const car = data.carCard.find(c => c.id === parseInt(req.params.id));
+  if (!car) return res.status(404).json({ message: "Car not found" });
+  res.json(car);
+});
 
 // Update (replace) a car by ID
 app.put("/api/cars/:id", (req, res) => {
