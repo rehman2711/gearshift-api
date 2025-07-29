@@ -557,7 +557,7 @@ app.post("/api/bookings", (req, res) => {
 });
 
 // Upload API
-app.post("/api/upload", upload.single("image"), (req, res) => {
+app.post("/api/uploads", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
