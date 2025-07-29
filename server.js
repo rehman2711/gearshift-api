@@ -548,6 +548,14 @@ app.get("/api/bookings/:id", (req, res) => {
   booking ? res.json(booking) : res.status(404).json({ message: "Booking not found" });
 });
 
+// Create a new booking
+app.post("/api/bookings", (req, res) => {
+  const newId = data.viewCustomerBookings.length > 0 ? Math.max(...data.viewCustomerBookings.map(b => b.id)) + 1 : 1;
+  const newBooking = { ...req.body, id: newId };
+  data.viewCustomerBookings.push(newBooking);
+  res.status(201).json(newBooking);
+});
+
 // Upload API
 app.post("/api/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
