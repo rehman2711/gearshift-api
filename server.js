@@ -485,6 +485,14 @@ app.get("/api/cars/:id", (req, res) => {
   res.json(car);
 });
 
+// Create a new car
+app.post("/api/cars", (req, res) => {
+  const newId = data.carCard.length > 0 ? Math.max(...data.carCard.map(c => c.id)) + 1 : 1;
+  const newCar = { ...req.body, id: newId };
+  data.carCard.push(newCar);
+  res.status(201).json(newCar);
+});
+
 // Update (replace) a car by ID
 app.put("/api/cars/:id", (req, res) => {
   const idx = data.carCard.findIndex(c => c.id === parseInt(req.params.id));
