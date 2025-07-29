@@ -249,6 +249,62 @@ const data = {
       "buttonDelete": "Delete",
       "cAvailability": "Check Availability",
       "cStatus": "Not Available"
+    },
+    {
+      "id": 9,
+      "cId": 9,
+      "cImg": "/images/cars/benz-g-63.jpg",
+      "cName": "Mercedes Benz G 63",
+      "cText": "The Mercedes-Benz G 63 is bold, powerful, and luxurious. Its rugged design hides a plush interior and a mighty V8 engine. It’s just as ready for off-road adventures as it is for city streets.",
+      "cSlogan": "Smooth ride, bold design — feel the difference with every turn.",
+      "cCurrency": "AED",
+      "cMoney": " 2900",
+      "cDay": " DAY",
+      "cYear": "2021",
+      "cButton": "See Full Details",
+      "cModel": "SUV",
+      "cBrand": "MERCEDEZ",
+      "cFuel": "Petrol",
+      "cLocation": "",
+      "img1": "/images/cars/mercedez-benz/gclass-right.jpg",
+      "img2": "/images/cars/mercedez-benz/gclass-back.jpg",
+      "img3": "/images/cars/mercedez-benz/gclass-left.jpg",
+      "mileage": "7700",
+      "type": "Automatic",
+      "person": "5",
+      "bags": "6",
+      "buttonEdit": "Edit",
+      "buttonDelete": "Delete",
+      "cAvailability": "Check Availability",
+      "cStatus": "Not Available"
+    },
+    {
+      "id": 10,
+      "cId": 10,
+      "cImg": "/images/cars/benz-g-63.jpg",
+      "cName": "Mercedes Benz G 63",
+      "cText": "The Mercedes-Benz G 63 is bold, powerful, and luxurious. Its rugged design hides a plush interior and a mighty V8 engine. It’s just as ready for off-road adventures as it is for city streets.",
+      "cSlogan": "Smooth ride, bold design — feel the difference with every turn.",
+      "cCurrency": "AED",
+      "cMoney": " 2900",
+      "cDay": " DAY",
+      "cYear": "2021",
+      "cButton": "See Full Details",
+      "cModel": "SUV",
+      "cBrand": "MERCEDEZ",
+      "cFuel": "Petrol",
+      "cLocation": "",
+      "img1": "/images/cars/mercedez-benz/gclass-right.jpg",
+      "img2": "/images/cars/mercedez-benz/gclass-back.jpg",
+      "img3": "/images/cars/mercedez-benz/gclass-left.jpg",
+      "mileage": "7700",
+      "type": "Automatic",
+      "person": "5",
+      "bags": "6",
+      "buttonEdit": "Edit",
+      "buttonDelete": "Delete",
+      "cAvailability": "Check Availability",
+      "cStatus": "Not Available"
     }
   ],
   viewCustomerBookings: [
@@ -405,6 +461,17 @@ const data = {
       "licence": "27 DRF 2006",
       "cName": "Mercedes Benz G 63",
       "id": 14
+    },
+    {
+      "image": "/images/form-images/defaultAvatar.jpg",
+      "name": "Kalyani Lahane",
+      "mobile": "987654321",
+      "email": "kalyani@gmail.com",
+      "gender": "Female",
+      "address": "",
+      "licence": "27 DRF 2006",
+      "cName": "Mercedes Benz G 63",
+      "id": 15
     }
   ]
 };
@@ -412,9 +479,52 @@ const data = {
 // Routes
 app.get("/api/cars", (req, res) => res.json(data.carCard));
 
-app.get("/api/cars/:id", (req, res) => {
+// Update (replace) a car by ID
+app.put("/api/cars/:id", (req, res) => {
+  const idx = data.carCard.findIndex(c => c.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: "Car not found" });
+  data.carCard[idx] = { ...req.body, id: data.carCard[idx].id }; // preserve id
+  res.json(data.carCard[idx]);
+});
+
+// Partial update a car by ID
+app.patch("/api/cars/:id", (req, res) => {
   const car = data.carCard.find(c => c.id === parseInt(req.params.id));
-  car ? res.json(car) : res.status(404).json({ message: "Car not found" });
+  if (!car) return res.status(404).json({ message: "Car not found" });
+  Object.assign(car, req.body);
+  res.json(car);
+});
+
+// Delete a car by ID
+app.delete("/api/cars/:id", (req, res) => {
+  const idx = data.carCard.findIndex(c => c.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: "Car not found" });
+  const removed = data.carCard.splice(idx, 1);
+  res.json({ message: "Car deleted", car: removed[0] });
+});
+
+// Update (replace) a booking by ID
+app.put("/api/bookings/:id", (req, res) => {
+  const idx = data.viewCustomerBookings.findIndex(b => b.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: "Booking not found" });
+  data.viewCustomerBookings[idx] = { ...req.body, id: data.viewCustomerBookings[idx].id }; // preserve id
+  res.json(data.viewCustomerBookings[idx]);
+});
+
+// Partial update a booking by ID
+app.patch("/api/bookings/:id", (req, res) => {
+  const booking = data.viewCustomerBookings.find(b => b.id === parseInt(req.params.id));
+  if (!booking) return res.status(404).json({ message: "Booking not found" });
+  Object.assign(booking, req.body);
+  res.json(booking);
+});
+
+// Delete a booking by ID
+app.delete("/api/bookings/:id", (req, res) => {
+  const idx = data.viewCustomerBookings.findIndex(b => b.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: "Booking not found" });
+  const removed = data.viewCustomerBookings.splice(idx, 1);
+  res.json({ message: "Booking deleted", booking: removed[0] });
 });
 
 app.get("/api/bookings", (req, res) => res.json(data.viewCustomerBookings));
