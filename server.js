@@ -6,8 +6,10 @@ const app = express();
 const PORT = 5000;
 
 // Enable CORS & JSON parsing
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://gearshift-api-9isy.onrender.com/api']
+}));app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // Serve static images
 app.use("/images", express.static(path.join(__dirname, "images")));
