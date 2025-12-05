@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Insert Car</title>
+</head>
+
+<body class="bg-neutral-100 text-neutral-900">
+
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <form action="api/v1/insert-car" method="POST" enctype="multipart/form-data"
+            class="w-full max-w-2xl bg-white border border-neutral-200 shadow-md rounded-xl p-8 space-y-8">
+
+            <h2 class="text-2xl font-semibold tracking-tight">Add New Car</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Car Name</label>
+                    <input type="text" name="carName"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Brand</label>
+                    <input type="text" name="carBrandName"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Model</label>
+                    <input type="text" name="carModelName"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Year</label>
+                    <input type="number" name="carManufactureYear"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Rent</label>
+                    <input type="text" name="carRent"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Currency</label>
+                    <input type="text" name="carCurrency"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Fuel Type</label>
+                    <input type="text" name="carFuelType"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Mileage</label>
+                    <input type="text" name="carMileage"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">carGearSystem</label>
+                    <input type="text" name="carGearSystem"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">carSeatingCapacity</label>
+                    <input type="text" name="carSeatingCapacity"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">carStorageCapacity</label>
+                    <input type="text" name="carStorageCapacity"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">carStatus</label>
+                    <input type="text" name="carStatus"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">carAvailableDate</label>
+                    <input type="date" name="carAvailableDate"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium">Slogan</label>
+                    <input type="text" name="carSlogan"
+                        class="w-full h-10 px-3 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none" />
+                </div>
+
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-sm font-medium">Description</label>
+                <textarea name="carDescription" rows="3"
+                    class="w-full px-3 py-2 border border-neutral-300 rounded-md text-sm focus-visible:ring-2 focus-visible:ring-black outline-none"></textarea>
+            </div>
+
+
+            <div class="grid grid-cols-1 gap-4">
+                <label class="text-sm font-medium">Images</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="file" name="carImageMain" class="text-sm">
+                    <input type="file" name="carImageSub1" class="text-sm">
+                    <input type="file" name="carImageSub2" class="text-sm">
+                    <input type="file" name="carImageSub3" class="text-sm">
+                </div>
+            </div>
+
+            <button
+                class="w-full h-12 bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 transition-colors">
+                Save Car
+            </button>
+
+        </form>
+    </div>
+
+</body>
+
+</html>
