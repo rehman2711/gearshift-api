@@ -6,6 +6,7 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const s3 = require("./awsConfig");
 require("dotenv").config();
+const cors = require("cors");
 
 // ===================================================
 
