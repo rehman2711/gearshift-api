@@ -7,6 +7,7 @@ const multerS3 = require("multer-s3");
 const s3 = require("./awsConfig");
 require("dotenv").config();
 const cors = require("cors");
+const { swaggerUi, swaggerSpec } = require("./swagger");
 
 // ===================================================
 
@@ -20,40 +21,56 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files
 app.use("/uploads", express.static("my-uploads"));
 
-
 // setting cors policy
 const allowedOrigins = [
-  "http://localhost:3000/",
+  "http://localhost:4407/",
   "https://gearshift-rentals.vercel.app/",
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Allow server-to-server or Postman
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // Allow server-to-server or Postman
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-}));
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
+// ============= SWAGGER =============
+
+// Swagger UI route
+app.use("/gearshift-api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/**
+ * @swagger
+ * /api/hello:
+ *   get:
+ *     summary: Returns hello message
+ *     tags: [General]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Hello from Express API!
+ */
 
 // ===================================================
 
 const PORT = process.env.PORT || 4407;
 
 // ================= MULTER CONFIG ===================
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "my-uploads");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + "-" + file.originalname);
-//   },
-// });
 
 const storage = multerS3({
   s3,
@@ -83,6 +100,22 @@ app.listen(PORT, () => {
 
 // ===============  SELECT ROUTE  =========================
 
+/**
+ * @swagger
+ * /api/v1/all-cars:
+ *   get:
+ *     summary: Get all cars
+ *     tags: [Cars]
+ *     responses:
+ *       200:
+ *         description: Returns all cars
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
 app.get("/api/v1/all-cars", async (req, res) => {
   try {
     var SelectQuery = `select * from cars`;
@@ -98,6 +131,23 @@ app.get("/api/v1/all-cars", async (req, res) => {
 
 // ===============  SINGLE CAR DATA   ================
 
+/**
+ * @swagger
+ * /api/v1/single-car/{idd}:
+ *   get:
+ *     summary: Get single car by ID
+ *     tags: [Cars]
+ *     parameters:
+ *       - in: path
+ *         name: idd
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Car ID
+ *     responses:
+ *       200:
+ *         description: Single car data
+ */
 app.get("/api/v1/single-car/:idd", async (req, res) => {
   try {
     const { idd } = req.params;
@@ -113,6 +163,65 @@ app.get("/api/v1/single-car/:idd", async (req, res) => {
 
 // ========== INSERT DATA ROUTE  ====================
 
+/**
+ * @swagger
+ * /api/v1/insert-car:
+ *   post:
+ *     summary: Insert a new car (with images)
+ *     tags: [Cars]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               carName:
+ *                 type: string
+ *               carDescription:
+ *                 type: string
+ *               carSlogan:
+ *                 type: string
+ *               carCurrency:
+ *                 type: string
+ *               carRent:
+ *                 type: string
+ *               carManufactureYear:
+ *                 type: string
+ *               carBrandName:
+ *                 type: string
+ *               carModelName:
+ *                 type: string
+ *               carFuelType:
+ *                 type: string
+ *               carMileage:
+ *                 type: string
+ *               carGearSystem:
+ *                 type: string
+ *               carSeatingCapacity:
+ *                 type: string
+ *               carStorageCapacity:
+ *                 type: string
+ *               carStatus:
+ *                 type: string
+ *               carAvailableDate:
+ *                 type: string
+ *               carImageMain:
+ *                 type: string
+ *                 format: binary
+ *               carImageSub1:
+ *                 type: string
+ *                 format: binary
+ *               carImageSub2:
+ *                 type: string
+ *                 format: binary
+ *               carImageSub3:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Car inserted successfully
+ */
 app.get("/form", (req, res) => {
   res.render("form.ejs");
 });
@@ -126,9 +235,6 @@ app.post(
     { name: "carImageSub3", maxCount: 1 },
   ]),
   async (req, res) => {
-    // console.log(req.body);
-    // console.log(req.files);
-
     const {
       carName,
       carDescription,
@@ -146,11 +252,6 @@ app.post(
       carStatus,
       carAvailableDate,
     } = req.body;
-
-    // req.files.carImageMain[0].filename;
-    // req.files.carImageSub1[0].filename;
-    // req.files.carImageSub2[0].filename;
-    // req.files.carImageSub3[0].filename;
 
     console.log(req.files);
 
@@ -215,6 +316,25 @@ app.post(
 
 // ===============  EDIT CAR DATA   ================
 
+/**
+ * @swagger
+ * /api/v1/edit-car/{id}:
+ *   patch:
+ *     summary: Edit existing car data
+ *     tags: [Cars]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Car ID
+ *     requestBody:
+ *       required: false
+ *     responses:
+ *       200:
+ *         description: Car updated successfully
+ */
 app.patch("/api/v1/edit-car/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -274,6 +394,23 @@ app.patch("/api/v1/edit-car/:id", async (req, res) => {
 
 // ================= DELETE ROUTE ====================
 
+/**
+ * @swagger
+ * /api/v1/delete-car/{id}:
+ *   delete:
+ *     summary: Delete car by ID
+ *     tags: [Cars]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Car ID
+ *     responses:
+ *       200:
+ *         description: Car deleted successfully
+ */
 app.delete("/api/v1/delete-car/:id", async (req, res) => {
   const { id } = req.params;
 
