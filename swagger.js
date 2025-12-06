@@ -7,11 +7,17 @@ const swaggerOptions = {
     info: {
       title: "GEARSHIFT CAR RENTALS API",
       version: "1.0.0",
-      description: "API documentation for my Express server",
+      description:
+        "API documentation for Gearshift Car Rentals. \n\nVisit Swagger Docs: [gearshift-api-docs](http://localhost:4407/gearshift-api-docs/)",
     },
     servers: [
       {
         url: "http://localhost:4407",
+        description: "Local development server",
+      },
+      {
+        url: "https://gearshift-rentals.vercel.app",
+        description: "Production server",
       },
     ],
   },
