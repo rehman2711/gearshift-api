@@ -255,10 +255,10 @@ app.post(
 
     console.log(req.files);
 
-    const main = req.files.carImageMain[0].filename;
-    const sub1 = req.files.carImageSub1[0].filename;
-    const sub2 = req.files.carImageSub2[0].filename;
-    const sub3 = req.files.carImageSub3[0].filename;
+    const main = req.files.carImageMain[0].key;
+    const sub1 = req.files.carImageSub1[0].key;
+    const sub2 = req.files.carImageSub2[0].key;
+    const sub3 = req.files.carImageSub3[0].key;
 
     const carInsertQuery = `INSERT INTO cars (	
     carName	,
