@@ -23,10 +23,10 @@ app.use("/uploads", express.static("my-uploads"));
 
 // setting cors policy
 const allowedOrigins = [
-  "http://localhost:3000/",
-  "http://localhost:4407/",
-  "https://gearshift-rentals.vercel.app/",
-  "https://gearshift-api-latest.onrender.com/",
+  "http://localhost:3000/*",
+  "http://localhost:4407/*",
+  "https://gearshift-rentals.vercel.app/*",
+  "https://gearshift-api-latest.onrender.com/*",
 ];
 
 app.use(
