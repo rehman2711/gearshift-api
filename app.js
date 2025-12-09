@@ -425,3 +425,125 @@ app.delete("/api/v1/delete-car/:id", async (req, res) => {
   }
 });
 // ===================================================
+
+// ==================== BOOKINGS POST=================
+app.post(
+  "/api/v1/book-car",
+  upload.single("customerImage"),
+  async (req, res) => {
+    const {
+      customerName,
+      customerMobile,
+      customerEmail,
+      customerGender,
+      customerAddress,
+      customerPAN,
+      customerChoosenCar,
+      customerChoosenCarFrom,
+      customerChoosenCarTo,
+    } = req.body;
+
+    console.log(req.file.key);
+    // console.log(req.file)
+
+    try {
+      const bookingWithImageQuery = `INSERT INTO bookings (
+      customerName,
+      customerMobile,
+      customerEmail,
+      customerGender,
+      customerAddress,
+      customerPAN,
+      customerChoosenCar,
+      customerChoosenCarFrom,
+      customerChoosenCarTo,
+      customerImage ) 
+      VALUES (
+      "${customerName}",
+      "${customerMobile}",
+      "${customerEmail}",
+      "${customerGender}",
+      "${customerAddress}",
+      "${customerPAN}",
+      "${customerChoosenCar}",
+      "${customerChoosenCarFrom}",
+      "${customerChoosenCarTo}",
+      "${req.file.key}"
+      ) `;
+
+      const bookingResponse = await connection.execute(bookingWithImageQuery);
+      console.log(bookingResponse);
+
+      res.status(200).json({ message: "Booking Successfully" });
+    } catch (error) {
+      console.log("Error while Making Booking" + error);
+    }
+  }
+);
+
+// =============================================================================
+
+// ======================== DELETE BOOKINGS ( ANOTHER TABLE SHIFT) ==========
+
+app.delete("/api/v1/delete-booking/:delete_id", async (req, res) => {
+  const { delete_id } = req.params;
+
+  try {
+    const shiftAndDeleteQuery = `
+    INSERT INTO bookings_completed (
+  customerName,
+  customerMobile,
+  customerEmail,
+  customerGender,
+  customerAddress,
+  customerPAN,
+  customerChoosenCar,
+  customerChoosenCarFrom,
+  customerChoosenCarTo,
+  customerImage
+)
+SELECT
+  customerName,
+  customerMobile,
+  customerEmail,
+  customerGender,
+  customerAddress,
+  customerPAN,
+  customerChoosenCar,
+  customerChoosenCarFrom,
+  customerChoosenCarTo,
+  customerImage
+FROM bookings
+WHERE id = ${delete_id};
+
+DELETE FROM bookings WHERE id = ${delete_id} `;
+
+    const deleteBookingResponse = await connection.query(shiftAndDeleteQuery);
+    console.log(deleteBookingResponse);
+    res.status(200).json({ message: "Record Moved To Bookings Completed" });
+  } catch (error) {
+    console.log("Error while deleting booking" + error);
+  }
+});
+
+// =============================================================================
+
+// =============== BOOKINGS DELETE AREA ( COMPLETED BOOKINGS ) ==============
+
+app.get("/api/v1/bookings_completed", async (req, res) => {
+  try {
+    fetchCompletedBookingsQuery = `SELECT * FROM bookings_completed`;
+
+    const completedBookingsQueryResponse = await connection.execute(
+      fetchCompletedBookingsQuery
+    );
+
+    console.log(completedBookingsQueryResponse);
+    res.send(completedBookingsQueryResponse?.[0]);
+  } catch (errorr) {
+    console.log("Error While fetching Completed Bookings" + errorr);
+  }
+});
+// STORE THE DELETED ONE IN THIS API
+
+// ===================================================

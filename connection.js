@@ -7,9 +7,12 @@ const db = mysql.createPool({
   user: process.env.USER,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
+  multipleStatements: true,
 });
 
-// // SQL Query to create table if not exists
+// CARS TABLE
+
+// // SQL Query to create cars table if not exists
 // const createCarsTableQuery = `
 // CREATE TABLE IF NOT EXISTS cars (
 //   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -26,12 +29,31 @@ const db = mysql.createPool({
 //   carGearSystem VARCHAR(100),
 //   carSeatingCapacity INT,
 //   carStorageCapacity INT,
-//   carStatus VARCHAR(50),
-//   carAvailableDate DATE,
+//   carStatus BOOLEAN,
+//   carAvailableDate DATETIME,
 //   carImageMain VARCHAR(500),
 //   carImageSub1 VARCHAR(500),
 //   carImageSub2 VARCHAR(500),
 //   carImageSub3 VARCHAR(500)
+// );
+//  `;
+
+// BOOKINGS TABLE
+
+// // SQL Query to create booking table if not exists
+// const createBookingsTableQuery = `
+// CREATE TABLE IF NOT EXISTS bookings (
+//   id INT AUTO_INCREMENT PRIMARY KEY,
+//   customerName VARCHAR(255),
+//   customerMobile VARCHAR(20),
+//   customerEmail VARCHAR(255),
+//   customerGender VARCHAR(10),
+//   customerAddress VARCHAR(255),
+//   customerPAN VARCHAR(255),
+//   customerImage VARCHAR(100),
+//   customerChoosenCar VARCHAR(255),
+//   customerChoosenCarFrom DATETIME,
+//   customerChoosenCarTo DATETIME
 // );
 // `;
 
@@ -44,6 +66,10 @@ async function initDatabase() {
     // Create cars table
     // await connection.query(createCarsTableQuery);
     // console.log("✅ 'cars' table is ready!");
+
+    // Create bookings table
+    // await connection.query(createBookingsTableQuery);
+    // console.log("✅ 'bookings' table is ready!");
 
     connection.release();
   } catch (error) {
