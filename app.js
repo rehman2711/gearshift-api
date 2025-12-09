@@ -427,6 +427,71 @@ app.delete("/api/v1/delete-car/:id", async (req, res) => {
 // ===================================================
 
 // ==================== BOOKINGS POST=================
+
+/**
+ * @swagger
+ * /api/v1/book-car:
+ *   post:
+ *     summary: Create a new car booking with customer details and uploaded image
+ *     tags: [Bookings]
+ *     consumes:
+ *       - multipart/form-data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               customerName:
+ *                 type: string
+ *               customerMobile:
+ *                 type: string
+ *               customerEmail:
+ *                 type: string
+ *               customerGender:
+ *                 type: string
+ *               customerAddress:
+ *                 type: string
+ *               customerPAN:
+ *                 type: string
+ *               customerChoosenCar:
+ *                 type: string
+ *               customerChoosenCarFrom:
+ *                 type: string
+ *                 format: date
+ *               customerChoosenCarTo:
+ *                 type: string
+ *                 format: date
+ *               customerImage:
+ *                 type: string
+ *                 format: binary
+ *             required:
+ *               - customerName
+ *               - customerMobile
+ *               - customerEmail
+ *               - customerGender
+ *               - customerAddress
+ *               - customerPAN
+ *               - customerChoosenCar
+ *               - customerChoosenCarFrom
+ *               - customerChoosenCarTo
+ *               - customerImage
+ *     responses:
+ *       200:
+ *         description: Booking created successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Booking Successfully
+ *       500:
+ *         description: Error while creating booking
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Error while making booking
+ */
+
 app.post(
   "/api/v1/book-car",
   upload.single("customerImage"),
@@ -485,6 +550,40 @@ app.post(
 
 // ======================== DELETE BOOKINGS ( ANOTHER TABLE SHIFT) ==========
 
+/**
+ * @swagger
+ * /api/v1/delete-booking/{delete_id}:
+ *   delete:
+ *     summary: Move booking to completed table and delete from active bookings
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: delete_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Booking ID to move and delete
+ *     responses:
+ *       200:
+ *         description: Booking record moved to bookings_completed and deleted from bookings
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Record Moved To Bookings Completed
+ *       404:
+ *         description: Booking record not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Booking record not found
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Error while deleting booking
+ */
+
 app.delete("/api/v1/delete-booking/:delete_id", async (req, res) => {
   const { delete_id } = req.params;
 
@@ -529,6 +628,38 @@ DELETE FROM bookings WHERE id = ${delete_id} `;
 // =============================================================================
 
 // =============== BOOKINGS DELETE AREA ( COMPLETED BOOKINGS ) ==============
+// STORE THE DELETED ONE IN THIS API
+
+/**
+ * @swagger
+ * /api/v1/bookings_completed:
+ *   get:
+ *     summary: Fetch all completed bookings
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of completed bookings
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id: 1
+ *                 customerName: John Doe
+ *                 customerMobile: 9876543210
+ *                 customerEmail: john@example.com
+ *                 customerGender: Male
+ *                 customerAddress: USA
+ *                 customerPAN: ABCDE1234F
+ *                 customerChoosenCar: Tesla Model X
+ *                 customerChoosenCarFrom: "2025-01-01"
+ *                 customerChoosenCarTo: "2025-01-05"
+ *                 customerImage: some-image-url.jpg
+ *       500:
+ *         description: Error while fetching completed bookings
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Error while fetching completed bookings
+ */
 
 app.get("/api/v1/bookings_completed", async (req, res) => {
   try {
@@ -544,6 +675,5 @@ app.get("/api/v1/bookings_completed", async (req, res) => {
     console.log("Error While fetching Completed Bookings" + errorr);
   }
 });
-// STORE THE DELETED ONE IN THIS API
 
 // ===================================================
