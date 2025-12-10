@@ -508,7 +508,7 @@ app.post(
       customerChoosenCarTo,
     } = req.body;
 
-    console.log(req.file.key);
+    console.log(req?.file?.key);
     // console.log(req.file)
 
     try {
@@ -545,6 +545,56 @@ app.post(
     }
   }
 );
+
+// ========================ALL BOOKINGS =====================================================
+
+/**
+ * @swagger
+ * /api/v1/book_car:
+ *   get:
+ *     summary: Fetch all active car bookings
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of active car bookings
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id: 1
+ *                 customerName: John Doe
+ *                 customerMobile: 9876543210
+ *                 customerEmail: john@example.com
+ *                 customerGender: Male
+ *                 customerAddress: USA
+ *                 customerPAN: ABCDE1234F
+ *                 customerChoosenCar: BMW X5
+ *                 customerChoosenCarFrom: "2025-01-05"
+ *                 customerChoosenCarTo: "2025-01-10"
+ *                 customerImage: uploaded-image-key.jpg
+ *       500:
+ *         description: Error while fetching bookings
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Error While fetching Bookings
+ */
+
+app.get("/api/v1/book_car", async (req, res) => {
+  try {
+    const fetchBookedCarsQuery = `SELECT * FROM bookings`;
+
+    const bookedCarsQueryResponse = await connection.execute(
+      fetchBookedCarsQuery
+    );
+
+    console.log(bookedCarsQueryResponse);
+    res.send(bookedCarsQueryResponse?.[0]);
+  } catch (errorr) {
+    console.log("Error While fetching Bookings" + errorr);
+  }
+});
+
+// =============================================================================
 
 // =============================================================================
 
