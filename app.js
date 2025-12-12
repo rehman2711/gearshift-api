@@ -337,61 +337,75 @@ app.post(
  *       200:
  *         description: Car updated successfully
  */
-app.patch("/api/v1/edit-car/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
+app.patch(
+  "/api/v1/edit-car/:id",
+  upload.fields([
+    { name: "carImageMain", maxCount: 1 },
+    { name: "carImageSub1", maxCount: 1 },
+    { name: "carImageSub2", maxCount: 1 },
+    { name: "carImageSub3", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
 
-    const {
-      carName,
-      carDescription,
-      carSlogan,
-      carCurrency,
-      carRent,
-      carManufactureYear,
-      carBrandName,
-      carModelName,
-      carFuelType,
-      carMileage,
-      carGearSystem,
-      carSeatingCapacity,
-      carStorageCapacity,
-      carStatus,
-      carAvailableDate,
-    } = req.body;
+      console.log("BODY:", req.body); // <-- MUST show fields
+      console.log("FILES:", req.files);
 
-    const files = req.files ?? {};
+      const {
+        carName,
+        carDescription,
+        carSlogan,
+        carCurrency,
+        carRent,
+        carManufactureYear,
+        carBrandName,
+        carModelName,
+        carFuelType,
+        carMileage,
+        carGearSystem,
+        carSeatingCapacity,
+        carStorageCapacity,
+        carStatus,
+        carAvailableDate,
+      } = req.body;
 
-    const { carImageMain, carImageSub1, carImageSub2, carImageSub3 } = files;
+      const files = req.files ?? {};
 
-    if (carImageMain) {
-      var editCarMainImage = `UPDATE cars set carImageMain="${carImageMain[0].filename}"  WHERE id = ${id}`;
-      await connection.execute(editCarMainImage);
+      console.log(req.file);
+
+      const { carImageMain, carImageSub1, carImageSub2, carImageSub3 } = files;
+
+      if (carImageMain) {
+        var editCarMainImage = `UPDATE cars set carImageMain="${carImageMain[0].key}"  WHERE id = ${id}`;
+        await connection.execute(editCarMainImage);
+      }
+
+      if (carImageSub1) {
+        var editCarImageSub1 = `UPDATE cars set carImageSub1="${carImageSub1[0].key}"  WHERE id = ${id}`;
+        await connection.execute(editCarImageSub1);
+      }
+
+      if (carImageSub2) {
+        var editCarImageSub2 = `UPDATE cars set carImageSub2="${carImageSub2[0].key}"  WHERE id = ${id}`;
+        await connection.execute(editCarImageSub2);
+      }
+
+      if (carImageSub3) {
+        var editCarImageSub3 = `UPDATE cars set carImageSub3="${carImageSub3[0].key}"  WHERE id = ${id}`;
+        await connection.execute(editCarImageSub3);
+      }
+
+      const editCarQuery = `UPDATE cars set carName = "${carName}", carDescription = "${carDescription}", carSlogan = "${carSlogan}", carCurrency = "${carCurrency}", carRent = "${carRent}", carManufactureYear = "${carManufactureYear}", carBrandName = "${carBrandName}", carModelName = "${carModelName}", carFuelType = "${carFuelType}", carMileage = "${carMileage}", carGearSystem = "${carGearSystem}", carSeatingCapacity = "${carSeatingCapacity}", carStorageCapacity = "${carStorageCapacity}", carStatus = "${carStatus}", carAvailableDate = "${carAvailableDate}" WHERE id = ${id}`;
+
+      const editCarResponse = await connection.execute(editCarQuery);
+      console.log(editCarResponse?.[0]);
+      res.send(editCarResponse?.[0]);
+    } catch (error) {
+      console.log(`Error occured while editing car data ${error}`);
     }
-
-    if (carImageSub1) {
-      var editCarImageSub1 = `UPDATE cars set carImageSub1="${carImageSub1[0].filename}"  WHERE id = ${id}`;
-      await connection.execute(editCarImageSub1);
-    }
-
-    if (carImageSub2) {
-      var editCarImageSub2 = `UPDATE cars set carImageSub2="${carImageSub2[0].filename}"  WHERE id = ${id}`;
-      await connection.execute(editCarImageSub2);
-    }
-
-    if (carImageSub3) {
-      var editCarImageSub3 = `UPDATE cars set carImageSub3="${carImageSub3[0].filename}"  WHERE id = ${id}`;
-      await connection.execute(editCarImageSub3);
-    }
-
-    const editCarQuery = `UPDATE cars set carName = "${carName}", carDescription = "${carDescription}", carSlogan = "${carSlogan}", carCurrency = "${carCurrency}", carRent = "${carRent}", carManufactureYear = "${carManufactureYear}", carBrandName = "${carBrandName}", carModelName = "${carModelName}", carFuelType = "${carFuelType}", carMileage = "${carMileage}", carGearSystem = "${carGearSystem}", carSeatingCapacity = "${carSeatingCapacity}", carStorageCapacity = "${carStorageCapacity}", carStatus = "${carStatus}", carAvailableDate = "${carAvailableDate}" WHERE id = ${id}`;
-
-    const editCarResponse = await connection.execute(editCarQuery);
-    console.log(editCarResponse?.[0]);
-    res.send(editCarResponse?.[0]);
-  } catch (error) {
-    console.log(`Error occured while editing car data ${error}`);
   }
-});
+);
 // ===================================================
 
 // ================= DELETE ROUTE ====================
